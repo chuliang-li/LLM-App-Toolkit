@@ -1,24 +1,22 @@
 import streamlit as st
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.llms import OpenAI
+from langchain_community.chat_models import ChatOpenAI  # 关键修改
 from dotenv import load_dotenv
 import os
 
 load_dotenv() 
-api_key_sf = os.getenv('SILICONFLOW_API_KEY')
+apk_key_ali = os.getenv('DASHSCOPE_API_KEY')
 
-# 设置页面标题
 st.title("基于Langchain和Streamlit的大模型演示应用")
 
-# 初始化LLM
-llm = OpenAI(
-    model_name="deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
-    base_url="https://api.siliconflow.cn/v1",
-    api_key=api_key_sf
+# 使用 ChatOpenAI 替代 OpenAI
+llm = ChatOpenAI(
+    model_name="qwen3-coder-30b-a3b-instruct",
+    openai_api_base="https://dashscope.aliyuncs.com/compatible-mode/v1",
+    openai_api_key=apk_key_ali
 )
 
-# 定义Prompt模板
 template = """
 你是一个专业的助手，请根据以下信息提供详细回答：
 
@@ -33,21 +31,15 @@ prompt = PromptTemplate(
     template=template
 )
 
-# 创建链
 chain = LLMChain(llm=llm, prompt=prompt)
 
-# 用户输入
 question = st.text_input("请输入您的问题:")
 context = st.text_area("请输入相关背景信息（可选）", "")
 
-# 处理用户请求
 if st.button("获取回答"):
     if question:
         with st.spinner('正在生成回答...'):
-            # 执行链
             response = chain.run(question=question, context=context)
-            
-        # 显示结果
         st.subheader("回答:")
         st.write(response)
     else:
