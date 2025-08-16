@@ -5,4 +5,8 @@
 
 程序运行 `streamlit run rag_app.py`
 
+# ReAct Agent 和 Tool Calling Agents的区别
+- [1. ReAct Agent agent_ReAct.py](agent_ReAct.py)
+- [2. Tool Calling Agent agentToolCalling.py](agent_ToolCalling.py)
+
 
